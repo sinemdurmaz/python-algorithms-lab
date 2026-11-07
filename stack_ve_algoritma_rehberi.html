@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Stack & Dengeli Parantezler Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 920px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #a855f7, #38bdf8, #22c55e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #fff;
+    }
+
+    /* Stack Görsel Kulesi */
+    .stack-visual {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 3rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--code-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .plate-tower {
+      display: flex;
+      flex-direction: column-reverse;
+      width: 180px;
+      border-bottom: 4px solid var(--accent-blue);
+      border-left: 2px dashed var(--border);
+      border-right: 2px dashed var(--border);
+      padding: 0.5rem 0.5rem 0;
+      gap: 0.4rem;
+      min-height: 190px;
+      justify-content: flex-start;
+    }
+
+    .plate {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid var(--accent-blue);
+      color: #fff;
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-family: monospace;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .plate-top {
+      background: rgba(168, 85, 247, 0.3);
+      border-color: var(--accent-purple);
+      color: #d8b4fe;
+    }
+
+    .explanation-box {
+      max-width: 380px;
+    }
+
+    .explanation-box h4 {
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .explanation-box p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Tablo */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    .table th, .table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table th {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      margin: 1rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-top">Gün 1 &bull; Veri Yapıları & Algoritmalar</span>
+      <h1>Stack (Yığın) & Dengeli Parantezler</h1>
+      <p>LIFO (Last In First Out) mimarisinin mantığı ve LeetCode #20 algoritması.</p>
+    </header>
+
+    <!-- 1. STACK MANTIĞI -->
+    <section class="section">
+      <h2 class="section-title"><span>🥞</span> 1. Stack (Yığın) Veri Yapısı Nedir?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Stack, elemanların yalnızca <strong>en üstten (Top)</strong> eklenip çıkarılabildiği doğrusal bir veri yapısıdır.
+      </p>
+
+      <div class="stack-visual">
+        <div class="plate-tower">
+          <div class="plate">Eleman 1 (İlk Giren)</div>
+          <div class="plate">Eleman 2</div>
+          <div class="plate plate-top">Eleman 3 (Son Giren / İlk Çıkar)</div>
+        </div>
+
+        <div class="explanation-box">
+          <h4>LIFO Prensibi (Last In, First Out)</h4>
+          <p>
+            Üst üste dizilmiş yemek tabakları gibidir. 3. tabağı almadan 1. tabağa dokunamazsınız!
+          </p>
+          <ul style="color: var(--text-muted); font-size: 0.9rem; padding-left: 1.2rem;">
+            <li><code>push(x)</code>: En üste yeni tabak koyar.</li>
+            <li><code>pop()</code>: En üstteki tabağı alır.</li>
+            <li><code>peek()</code>: En üsttekine sadece göz atar.</li>
+          </ul>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Operasyon</th>
+            <th>Zaman Karmaşıklığı (Time Complexity)</th>
+            <th>Açıklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>push(x)</code></td>
+            <td style="color: var(--accent-green); font-weight: bold;">O(1)</td>
+            <td>Listenin sonuna ekleme anında yapılır.</td>
+          </tr>
+          <tr>
+            <td><code>pop()</code></td>
+            <td style="color: var(--accent-green); font-weight: bold;">O(1)</td>
+            <td>Listenin sonundaki eleman anında çıkarılır.</td>
+          </tr>
+          <tr>
+            <td><code>peek()</code></td>
+            <td style="color: var(--accent-green); font-weight: bold;">O(1)</td>
+            <td>Son elemana indeksle erişim O(1)'dir.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 2. LEETCODE 20 -->
+    <section class="section">
+      <h2 class="section-title"><span>🧩</span> 2. Algoritma: Dengeli Parantezler (LeetCode #20)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Verilen <code>"{ [ ( ) ] }"</code> dizisinin geçerli olup olmadığını Stack ile nasıl anlarız?
+      </p>
+
+      <pre><code>Girdi: "{ [ ( ) ] }"
+
+1. Karakter '{': Açılış parantezi -> Stack'e at.        Stack: ['{']
+2. Karakter '[': Açılış parantezi -> Stack'e at.        Stack: ['{', '[']
+3. Karakter '(': Açılış parantezi -> Stack'e at.        Stack: ['{', '[', '(']
+4. Karakter ')': Kapanış! Stack'ten çıkar: '(' ile eşleşti! Stack: ['{', '[']
+5. Karakter ']': Kapanış! Stack'ten çıkar: '[' ile eşleşti! Stack: ['{']
+6. Karakter '}': Kapanış! Stack'ten çıkar: '{' ile eşleşti! Stack: []
+
+Sonuç: Yığın bomboş kaldı -> Tüm parantezler DENGELİDİR (True)! ✅</code></pre>
+    </section>
+
+    <footer>
+      <p>Python Algorithms Lab &bull; Sinem Durmaz &bull; Gün 1</p>
+    </footer>
+  </div>
+</body>
+</html>
