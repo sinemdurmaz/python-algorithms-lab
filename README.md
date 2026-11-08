@@ -9,6 +9,18 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | Gün | Konu & Kategori | Veri Yapısı / Algoritma | Zorluk | Zaman | Alan | Test |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: |
 | **01** | **Stacks & Strings** | [Stack (LIFO)](data_structures/stack.py) & [Valid Parentheses (LeetCode #20)](algorithms/valid_parentheses.py) | Kolay | $O(N)$ | $O(N)$ | `11/11 PASSED` ✅ |
+| **02** | **Queues & Rate Limiting** | [Queue (FIFO)](data_structures/queue.py) & [RecentCounter (LeetCode #933)](algorithms/recent_counter.py) | Kolay | $O(1)$ | $O(W)$ | `14/14 PASSED` ✅ |
+
+---
+
+## 🥖 Gün 2: Queue (Kuyruk) & İstek Sayacı
+
+* **Veri Yapısı:** `data_structures/queue.py`
+  * Generic `Queue[T]` sınıfı (`collections.deque` optimizasyonuyla).
+  * `enqueue()`, `dequeue()`, `front()`, `is_empty()`, `size()` operasyonlarının tümü **$O(1)$** sürede çalışır.
+* **Algoritma:** `algorithms/recent_counter.py`
+  * Son 3000 ms zaman aralığındaki istekleri takip eden, süresi dolanları baştan temizleyen kuyruk algoritması.
+* **Görsel Rehber:** [queue_rehberi.html](queue_rehberi.html)
 
 ---
 

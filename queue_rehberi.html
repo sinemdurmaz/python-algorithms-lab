@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Queue (Kuyruk) & RecentCounter Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 920px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(20, 184, 166, 0.15);
+      color: var(--accent-teal);
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #14b8a6, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #fff;
+    }
+
+    /* Queue Görsel Şeması */
+    .queue-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--code-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .queue-tunnel {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-top: 3px solid var(--accent-teal);
+      border-bottom: 3px solid var(--accent-teal);
+      padding: 1rem 1.5rem;
+      border-radius: 4px;
+    }
+
+    .person {
+      padding: 0.6rem 1rem;
+      background: rgba(20, 184, 166, 0.2);
+      border: 1px solid var(--accent-teal);
+      border-radius: 6px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.88rem;
+    }
+
+    .person-front {
+      background: rgba(34, 197, 94, 0.25);
+      border-color: var(--accent-green);
+      color: #86efac;
+    }
+
+    .flow-indicators {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 500px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Karşılaştırma Kartları */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .card {
+      background: rgba(11, 17, 32, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+    .badge-teal { background: rgba(20, 184, 166, 0.15); color: var(--accent-teal); }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      margin: 1rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-top">Gün 2 &bull; Veri Yapıları & Algoritmalar</span>
+      <h1>Queue (Kuyruk / FIFO) & RecentCounter</h1>
+      <p>İlk Giren İlk Çıkar mantığı, Rate Limiting algoritmaları ve LeetCode #933.</p>
+    </header>
+
+    <!-- 1. STACK vs QUEUE -->
+    <section class="section">
+      <h2 class="section-title"><span>⚖️</span> 1. Stack (LIFO) ile Queue (FIFO) Arasındaki Fark</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <span class="badge badge-purple">Stack &bull; LIFO (Last In First Out)</span>
+          <h4 style="color: #fff; margin-bottom: 0.4rem;">Üst Üste Tabaklar</h4>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            En son eklenen eleman (en üstteki), ilk çıkarılır. Geri (Back / Undo) butonlarında kullanılır.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="badge badge-teal">Queue &bull; FIFO (First In First Out)</span>
+          <h4 style="color: #fff; margin-bottom: 0.4rem;">Fırın / Bilet Kuyruğu</h4>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            Kuyruğa ilk giren ilk biletini alır ve çıkar. Yazıcı çıktı sıralarında ve mesajlaşma kuyruklarında (RabbitMQ) kullanılır.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. QUEUE GÖRSEL -->
+    <section class="section">
+      <h2 class="section-title"><span>🚶‍♀️</span> 2. Queue (Kuyruk) Nasıl Çalışır?</h2>
+
+      <div class="queue-visual">
+        <div class="flow-indicators">
+          <span style="color: var(--accent-green); font-weight: bold;">⬅️ ÇIKIŞ (dequeue)</span>
+          <span style="color: var(--accent-teal); font-weight: bold;">GİRİŞ (enqueue) ⬅️</span>
+        </div>
+
+        <div class="queue-tunnel">
+          <div class="person person-front">Müşteri 1 (Front / İlk Girdi)</div>
+          <div class="person">Müşteri 2</div>
+          <div class="person">Müşteri 3 (Son Girdi)</div>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-muted); text-align: center;">
+          Yeni müşteri sıranın <strong>sonuna</strong> eklenir (<code>enqueue</code>).<br>
+          İşi biten müşteri sıranın <strong>başından</strong> ayrılır (<code>dequeue</code>).
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. RECENT COUNTER -->
+    <section class="section">
+      <h2 class="section-title"><span>⏱️</span> 3. Algoritma: RecentCounter (LeetCode #933)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Bir web API'sine son 3 saniyede (3000 ms) gelen istekleri sayan pencereleme algoritması:
+      </p>
+
+      <pre><code># İstek zamanı: t = 3002 ms geldiğinde
+1. Kuyruğa ekle: 3002
+2. Kontrol et: 3002 - 3000 = 2 ms'den daha eski istek var mı?
+   - Kuyruğun başında 1 ms vardı: 1 < 2 olduğu için kuyruktan ATILDI (dequeue)!
+3. Kuyrukta kalanlar: [100, 3001, 3002] -> Aktif İstek Sayısı: 3</code></pre>
+    </section>
+
+    <footer>
+      <p>Python Algorithms Lab &bull; Sinem Durmaz &bull; Gün 2</p>
+    </footer>
+  </div>
+</body>
+</html>
