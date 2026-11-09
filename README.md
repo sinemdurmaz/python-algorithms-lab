@@ -10,6 +10,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: |
 | **01** | **Stacks & Strings** | [Stack (LIFO)](data_structures/stack.py) & [Valid Parentheses (LeetCode #20)](algorithms/valid_parentheses.py) | Kolay | $O(N)$ | $O(N)$ | `11/11 PASSED` ✅ |
 | **02** | **Queues & Rate Limiting** | [Queue (FIFO)](data_structures/queue.py) & [RecentCounter (LeetCode #933)](algorithms/recent_counter.py) | Kolay | $O(1)$ | $O(W)$ | `14/14 PASSED` ✅ |
+| **03** | **Hash Tables & Arrays** | [Two Sum (LeetCode #1)](algorithms/two_sum.py) (Hash Map) | Kolay | $O(N)$ | $O(N)$ | `20/20 PASSED` ✅ |
+
+---
+
+## 🔍 Gün 3: Two Sum & Hash Map Optimizasyonu
+
+* **Algoritma:** `algorithms/two_sum.py`
+  * İç içe iki döngülü $O(N^2)$ kaba kuvvet yaklaşımı yerine, Python sözlüğü (Hash Map) kullanarak $O(N)$ sürede tamamlayıcı sayıyı (`target - num`) arayan optimizasyon.
+* **Görsel Rehber:** [two_sum_rehberi.html](two_sum_rehberi.html)
 
 ---
 
