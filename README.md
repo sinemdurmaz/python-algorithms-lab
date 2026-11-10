@@ -11,6 +11,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **01** | **Stacks & Strings** | [Stack (LIFO)](data_structures/stack.py) & [Valid Parentheses (LeetCode #20)](algorithms/valid_parentheses.py) | Kolay | $O(N)$ | $O(N)$ | `11/11 PASSED` ✅ |
 | **02** | **Queues & Rate Limiting** | [Queue (FIFO)](data_structures/queue.py) & [RecentCounter (LeetCode #933)](algorithms/recent_counter.py) | Kolay | $O(1)$ | $O(W)$ | `14/14 PASSED` ✅ |
 | **03** | **Hash Tables & Arrays** | [Two Sum (LeetCode #1)](algorithms/two_sum.py) (Hash Map) | Kolay | $O(N)$ | $O(N)$ | `20/20 PASSED` ✅ |
+| **04** | **Binary Search** | [Binary Search (LeetCode #704)](algorithms/binary_search.py) | Kolay | $O(\log N)$ | $O(1)$ | `28/28 PASSED` ✅ |
+
+---
+
+## 🎯 Gün 4: İkili Arama (Binary Search)
+
+* **Algoritma:** `algorithms/binary_search.py`
+  * Sıralı listelerde her adımda arama uzayını ikiye bölerek $O(\log N)$ logaritmik hızında arama yapan klasik Böl ve Yönet algoritması.
+* **Görsel Rehber:** [binary_search_rehberi.html](binary_search_rehberi.html)
 
 ---
 
