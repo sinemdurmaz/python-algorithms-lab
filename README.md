@@ -12,6 +12,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **02** | **Queues & Rate Limiting** | [Queue (FIFO)](data_structures/queue.py) & [RecentCounter (LeetCode #933)](algorithms/recent_counter.py) | Kolay | $O(1)$ | $O(W)$ | `14/14 PASSED` ✅ |
 | **03** | **Hash Tables & Arrays** | [Two Sum (LeetCode #1)](algorithms/two_sum.py) (Hash Map) | Kolay | $O(N)$ | $O(N)$ | `20/20 PASSED` ✅ |
 | **04** | **Binary Search** | [Binary Search (LeetCode #704)](algorithms/binary_search.py) | Kolay | $O(\log N)$ | $O(1)$ | `28/28 PASSED` ✅ |
+| **05** | **Greedy & Arrays** | [Best Time to Buy and Sell Stock (LeetCode #121)](algorithms/buy_sell_stock.py) | Kolay | $O(N)$ | $O(1)$ | `37/37 PASSED` ✅ |
+
+---
+
+## 📈 Gün 5: Best Time to Buy and Sell Stock (Açgözlü / Tek Geçiş)
+
+* **Algoritma:** `algorithms/buy_sell_stock.py`
+  * Gelecekteki fiyatları tahmin edemediğimiz borsada, geçmişteki en dip fiyatı (`min_price`) hafızada tutarak her gün kârı hesaplayan ve tek geçişte ($O(N)$ zaman, $O(1)$ alan) maksimum kârı bulan Greedy yaklaşımı.
+* **Görsel Rehber:** [stock_profit_rehberi.html](stock_profit_rehberi.html)
 
 ---
 

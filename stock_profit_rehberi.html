@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Hisse Kâr Maksimizasyonu Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 920px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #22c55e, #38bdf8, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #fff;
+    }
+
+    /* Borsa Çubuk Grafiği Görseli */
+    .chart-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 1.5rem;
+      height: 220px;
+      padding: 1.5rem 1rem 0.5rem;
+      background: var(--code-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .bar {
+      width: 44px;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.2s ease;
+    }
+
+    .bar-normal { background: #334155; }
+    .bar-buy { background: rgba(56, 189, 248, 0.4); border: 2px solid var(--accent-blue); }
+    .bar-sell { background: rgba(34, 197, 94, 0.5); border: 2px solid var(--accent-green); }
+
+    .day-label { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
+    .val-label { font-size: 0.85rem; font-weight: bold; color: #fff; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .card {
+      background: rgba(11, 17, 32, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+
+    .badge-rose { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); }
+    .badge-green { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      margin: 1rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-top">Gün 5 &bull; Açgözlü (Greedy) Algoritmalar</span>
+      <h1>Hisse Kâr Maksimizasyonu (LeetCode #121)</h1>
+      <p>Tek geçişte en dip alım ve en tepe satım gününü yakalama mantığı (O(N) Zaman, O(1) Alan).</p>
+    </header>
+
+    <!-- 1. GÖRSEL BORSA GRAFİĞİ -->
+    <section class="section">
+      <h2 class="section-title"><span>📊</span> 1. Fiyat Grafiği ve İdeal Alım-Satım</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Fiyatlar: <code>[7, 1, 5, 3, 6, 4]</code> &bull; Amaç: En dipte al, en tepede sat!
+      </p>
+
+      <div class="chart-container">
+        <div class="bar-wrapper">
+          <span class="val-label">7₺</span>
+          <div class="bar bar-normal" style="height: 140px;"></div>
+          <span class="day-label">1. Gün</span>
+        </div>
+
+        <div class="bar-wrapper">
+          <span class="val-label" style="color: var(--accent-blue);">1₺ (AL!)</span>
+          <div class="bar bar-buy" style="height: 30px;"></div>
+          <span class="day-label">2. Gün</span>
+        </div>
+
+        <div class="bar-wrapper">
+          <span class="val-label">5₺</span>
+          <div class="bar bar-normal" style="height: 100px;"></div>
+          <span class="day-label">3. Gün</span>
+        </div>
+
+        <div class="bar-wrapper">
+          <span class="val-label">3₺</span>
+          <div class="bar bar-normal" style="height: 60px;"></div>
+          <span class="day-label">4. Gün</span>
+        </div>
+
+        <div class="bar-wrapper">
+          <span class="val-label" style="color: var(--accent-green);">6₺ (SAT!)</span>
+          <div class="bar bar-sell" style="height: 120px;"></div>
+          <span class="day-label">5. Gün</span>
+        </div>
+
+        <div class="bar-wrapper">
+          <span class="val-label">4₺</span>
+          <div class="bar bar-normal" style="height: 80px;"></div>
+          <span class="day-label">6. Gün</span>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: var(--accent-green); font-weight: bold; margin-top: 0.5rem;">
+        Maksimum Kâr = 6₺ (Satış) - 1₺ (Alış) = +5₺ Kâr! 🎉
+      </p>
+    </section>
+
+    <!-- 2. KARŞILAŞTIRMA -->
+    <section class="section">
+      <h2 class="section-title"><span>⚡</span> 2. Neden Tek Geçiş (One-Pass / Greedy)?</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <span class="badge badge-rose">Kaba Kuvvet (Brute Force) &bull; O(N²)</span>
+          <h4 style="color: #fff; margin-bottom: 0.4rem;">İç İçe İki Döngü</h4>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            Her olası alım günü için sonraki tüm satış günlerini dener. Liste 10.000 gün olsaydı 100 milyon işlem yapardı.
+          </p>
+        </div>
+
+        <div class="card">
+          <span class="badge badge-green">Tek Geçiş (Greedy) &bull; O(N)</span>
+          <h4 style="color: #fff; margin-bottom: 0.4rem;">İki Değişkenle Takip</h4>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            Listeyi sadece 1 kez gezer. Gördüğü en dip fiyatı (<code>min_price</code>) ve anlık kârı (<code>price - min_price</code>) hafızada günceller.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Python Algorithms Lab &bull; Sinem Durmaz &bull; Gün 5</p>
+    </footer>
+  </div>
+</body>
+</html>
