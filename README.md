@@ -13,6 +13,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **03** | **Hash Tables & Arrays** | [Two Sum (LeetCode #1)](algorithms/two_sum.py) (Hash Map) | Kolay | $O(N)$ | $O(N)$ | `20/20 PASSED` ✅ |
 | **04** | **Binary Search** | [Binary Search (LeetCode #704)](algorithms/binary_search.py) | Kolay | $O(\log N)$ | $O(1)$ | `28/28 PASSED` ✅ |
 | **05** | **Greedy & Arrays** | [Best Time to Buy and Sell Stock (LeetCode #121)](algorithms/buy_sell_stock.py) | Kolay | $O(N)$ | $O(1)$ | `37/37 PASSED` ✅ |
+| **06** | **Two Pointers & Strings** | [Valid Palindrome (LeetCode #125)](algorithms/valid_palindrome.py) | Kolay | $O(N)$ | $O(1)$ | `53/53 PASSED` ✅ |
+
+---
+
+## 🪞 Gün 6: Valid Palindrome (İki İşaretçi / Two Pointers)
+
+* **Algoritma:** `algorithms/valid_palindrome.py`
+  * Ekstra bellek tahsis etmeden ($O(1)$ Space), cümlenin iki ucundan merkeze doğru ilerleyen ve noktalama işaretlerini atlayarak harfleri eşleştiren klasik İki İşaretçi (Two Pointers) yaklaşımı.
+* **Görsel Rehber:** [palindrome_rehberi.html](palindrome_rehberi.html)
 
 ---
 

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Two Pointers & Palindrom Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--accent-green);
+      border-radius: 9999px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-box {
+      border-radius: 8px;
+      padding: 1.25rem;
+      height: 100%;
+    }
+    .box-bad {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+    }
+    .box-good {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+    .comparison-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .box-bad .comparison-title { color: var(--accent-rose); }
+    .box-good .comparison-title { color: var(--accent-green); }
+
+    .tag-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .tag-bad { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); }
+    .tag-good { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); }
+
+    /* Interactive Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .preset-btn {
+      background: var(--card-hover);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      background: var(--accent-blue);
+      color: #090d16;
+      font-weight: 700;
+      border-color: var(--accent-blue);
+    }
+
+    .string-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      justify-content: center;
+      padding: 1.5rem 0.5rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      min-height: 95px;
+    }
+
+    .char-node {
+      width: 42px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      position: relative;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: all 0.25s ease;
+    }
+
+    .char-node .idx {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      position: absolute;
+      top: 2px;
+    }
+    .char-node .val {
+      margin-top: 10px;
+    }
+
+    .char-node.is-ignored {
+      opacity: 0.35;
+      background: rgba(255, 255, 255, 0.04);
+      border-style: dashed;
+    }
+
+    .char-node.left-pointer {
+      border: 2px solid var(--accent-green);
+      background: rgba(34, 197, 94, 0.25);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+      transform: translateY(-4px);
+    }
+    .char-node.left-pointer::after {
+      content: "LEFT";
+      position: absolute;
+      bottom: -18px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--accent-green);
+      letter-spacing: 0.05em;
+    }
+
+    .char-node.right-pointer {
+      border: 2px solid var(--accent-blue);
+      background: rgba(56, 189, 248, 0.25);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+      transform: translateY(-4px);
+    }
+    .char-node.right-pointer::after {
+      content: "RIGHT";
+      position: absolute;
+      bottom: -18px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+      letter-spacing: 0.05em;
+    }
+
+    .char-node.left-pointer.right-pointer {
+      border: 2px solid var(--accent-purple);
+      background: rgba(168, 85, 247, 0.3);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    }
+    .char-node.left-pointer.right-pointer::after {
+      content: "L & R";
+      color: var(--accent-purple);
+    }
+
+    .char-node.matched {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    .char-node.mismatched {
+      background: rgba(244, 63, 94, 0.3);
+      border-color: var(--accent-rose);
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+      animation: pulse 0.8s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-blue);
+      color: #090d16;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    /* Complexity Table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .comp-table th, .comp-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .comp-table th {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 06 &bull; Two Pointers &bull; LeetCode #125</div>
+      <h1>İki İşaretçi (Two Pointers) Tekniği</h1>
+      <p class="subtitle">
+        Ekstra bellek tahsis etmeden ($O(1)$ Space), metin üzerinde iki uçtan merkeze doğru ilerleyerek palindrom doğrulama.
+      </p>
+    </header>
+
+    <!-- Kıyaslama Kartları -->
+    <div class="grid-2">
+      <div class="comparison-box box-bad">
+        <div class="comparison-title">
+          <span>❌ Kaba Kuvvet (Reversal)</span>
+          <span class="tag-badge tag-bad">O(N) Alan / Ek Bellek</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+          Önce tüm metni filtreleyip yeni bir diziye kopyalar, ardından tersini alıp karşılaştırır:
+        </p>
+        <code>clean = [c.lower() for c in s if c.isalnum()]<br>return clean == clean[::-1]</code>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem;">
+          ⚠️ 100 MB'lık bir metinde fazladan 200 MB RAM tüketir ve büyük veri işlem hatlarında bellek patlamasına yol açar.
+        </p>
+      </div>
+
+      <div class="comparison-box box-good">
+        <div class="comparison-title">
+          <span>✅ Two Pointers (İki İşaretçi)</span>
+          <span class="tag-badge tag-good">O(1) Alan / Sabit Bellek</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+          Metni kopyalamaz; sol (<code>left</code>) ve sağ (<code>right</code>) işaretçilerle doğrudan orijinal metinde gezinir:
+        </p>
+        <code>while left &lt; right:<br>&nbsp;&nbsp;s[left].lower() == s[right].lower()</code>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem;">
+          🚀 Yalnızca iki tamsayı işaretçi değişkeni tutulur. Metin ne kadar devasa olursa olsun ek bellek tüketimi 0'dır!
+        </p>
+      </div>
+    </div>
+
+    <!-- İnteraktif Simülatör -->
+    <div class="card">
+      <h2>🎮 İnteraktif Two Pointers Adım Adım Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Aşağıdaki örneklerden birini seçin ve <strong>"Sonraki Adım"</strong> butonuna basarak iki işaretçinin noktalama işaretlerini nasıl atladığını ve karakterleri nasıl eşleştirdiğini canlı izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <div class="preset-buttons">
+          <button class="preset-btn active" onclick="loadExample(0)">"A man, a plan, a canal: Panama"</button>
+          <button class="preset-btn" onclick="loadExample(1)">"Was it a car or a cat I saw?"</button>
+          <button class="preset-btn" onclick="loadExample(2)">"race a car" (Geçersiz)</button>
+          <button class="preset-btn" onclick="loadExample(3)">"1a2b2a1" (Alfanumerik)</button>
+        </div>
+
+        <div id="stringDisplay" class="string-display"></div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetVisualizer()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">0</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. "Sonraki Adım" butonuna basarak taramayı başlatın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/valid_palindrome.py</h2>
+      <pre><code>def is_palindrome(s: str) -> bool:
+    """
+    LeetCode #125: Valid Palindrome (Geçerli Palindrom Kontrolü)
+
+    Algoritma Tekniği: İki İşaretçi (Two Pointers)
+    Zaman Karmaşıklığı: O(N) - Metin tek sefer taranır.
+    Alan Karmaşıklığı: O(1) - Ek liste tahsis edilmez, sabit bellek kullanılır.
+    """
+    left = 0
+    right = len(s) - 1
+
+    while left < right:
+        # Sol işaretçiyi alfasayısal olmayan karakterleri atlayarak ilerlet
+        while left < right and not s[left].isalnum():
+            left += 1
+
+        # Sağ işaretçiyi alfasayısal olmayan karakterleri atlayarak gerilet
+        while left < right and not s[right].isalnum():
+            right -= 1
+
+        # Karakterleri küçük harfe çevirerek karşılaştır
+        if s[left].lower() != s[right].lower():
+            return False
+
+        left += 1
+        right -= 1
+
+    return True</code></pre>
+    </div>
+
+    <!-- Karmaşıklık Analizi -->
+    <div class="card">
+      <h2>📊 Karmaşıklık & Performans Analizi</h2>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Metrik</th>
+            <th>Değer</th>
+            <th>Açıklama & Neden</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Zaman (Time)</strong></td>
+            <td><code style="color: var(--accent-green);">O(N)</code></td>
+            <td><code>left</code> ve <code>right</code> işaretçileri birbirine doğru yaklaşır; her karakter en fazla bir kez okunur.</td>
+          </tr>
+          <tr>
+            <td><strong>Alan (Auxiliary Space)</strong></td>
+            <td><code style="color: var(--accent-teal);">O(1)</code></td>
+            <td>Yalnızca iki sayı değişkeni (<code>left</code>, <code>right</code>) kullanılır. $O(N)$ string klonlama yapılmaz.</td>
+          </tr>
+          <tr>
+            <td><strong>Edge Cases</strong></td>
+            <td><code>100% Kapsama</code></td>
+            <td>Boş string <code>""</code>, tek boşluk <code>" "</code>, yalnızca noktalama <code>".,?!"</code>, tek karakter <code>"a"</code> durumları başarıyla ele alınır.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 6 Streak
+    </footer>
+  </div>
+
+  <script>
+    const EXAMPLES = [
+      "A man, a plan, a canal: Panama",
+      "Was it a car or a cat I saw?",
+      "race a car",
+      "1a2b2a1"
+    ];
+
+    let currentStr = EXAMPLES[0];
+    let steps = [];
+    let currentStepIdx = 0;
+
+    function isAlnum(char) {
+      return /^[a-zA-Z0-9]$/.test(char);
+    }
+
+    function generateSteps(s) {
+      const generated = [];
+      let left = 0;
+      let right = s.length - 1;
+
+      generated.push({
+        left,
+        right,
+        log: `Başlangıç: left = 0 ('${s[left]}'), right = ${right} ('${s[right]}')`,
+        status: 'init'
+      });
+
+      while (left < right) {
+        let leftMoved = false;
+        while (left < right && !isAlnum(s[left])) {
+          left++;
+          leftMoved = true;
+        }
+        if (leftMoved) {
+          generated.push({
+            left,
+            right,
+            log: `Alfasayısal olmayan karakterler atlandı -> left yeni konumu: ${left} ('${s[left]}')`,
+            status: 'skip-left'
+          });
+        }
+
+        let rightMoved = false;
+        while (left < right && !isAlnum(s[right])) {
+          right--;
+          rightMoved = true;
+        }
+        if (rightMoved) {
+          generated.push({
+            left,
+            right,
+            log: `Alfasayısal olmayan karakterler atlandı -> right yeni konumu: ${right} ('${s[right]}')`,
+            status: 'skip-right'
+          });
+        }
+
+        if (left >= right) break;
+
+        const leftChar = s[left].toLowerCase();
+        const rightChar = s[right].toLowerCase();
+
+        if (leftChar !== rightChar) {
+          generated.push({
+            left,
+            right,
+            log: `❌ UYUŞMAZLIK! s[${left}]='${s[left]}' != s[${right}]='${s[right]}'. Palindrom DEĞİL!`,
+            status: 'mismatch'
+          });
+          return generated;
+        } else {
+          generated.push({
+            left,
+            right,
+            log: `✅ EŞLEŞTİ: s[${left}]='${s[left]}' === s[${right}]='${s[right]}' ('${leftChar}'). İşaretçiler yaklaşıyor.`,
+            status: 'match'
+          });
+          left++;
+          right--;
+        }
+      }
+
+      generated.push({
+        left,
+        right,
+        log: `🎉 TEBRİKLER! Tüm karakterler başarıyla eşleşti ve işaretçiler kesişti. Bu metin GEÇERLİ BİR PALİNDROMDUR!`,
+        status: 'success'
+      });
+
+      return generated;
+    }
+
+    function renderDisplay() {
+      const container = document.getElementById('stringDisplay');
+      container.innerHTML = '';
+      const state = steps[currentStepIdx] || { left: -1, right: -1, status: 'init' };
+
+      for (let i = 0; i < currentStr.length; i++) {
+        const char = currentStr[i];
+        const node = document.createElement('div');
+        node.className = 'char-node';
+
+        if (!isAlnum(char)) {
+          node.classList.add('is-ignored');
+        }
+
+        if (i === state.left) {
+          node.classList.add('left-pointer');
+        }
+        if (i === state.right) {
+          node.classList.add('right-pointer');
+        }
+
+        if (state.status === 'match' && (i === state.left || i === state.right)) {
+          node.classList.add('matched');
+        }
+        if (state.status === 'mismatch' && (i === state.left || i === state.right)) {
+          node.classList.add('mismatched');
+        }
+
+        node.innerHTML = `<span class="idx">${i}</span><span class="val">${char === ' ' ? '␣' : char}</span>`;
+        container.appendChild(node);
+      }
+
+      document.getElementById('stepCounter').textContent = currentStepIdx;
+      document.getElementById('totalSteps').textContent = steps.length - 1;
+      document.getElementById('prevBtn').disabled = currentStepIdx === 0;
+      document.getElementById('nextBtn').disabled = currentStepIdx === steps.length - 1;
+
+      const logBox = document.getElementById('logBox');
+      logBox.textContent = state.log;
+      if (state.status === 'mismatch') {
+        logBox.style.color = 'var(--accent-rose)';
+      } else if (state.status === 'success' || state.status === 'match') {
+        logBox.style.color = 'var(--accent-green)';
+      } else {
+        logBox.style.color = 'var(--accent-teal)';
+      }
+    }
+
+    function loadExample(index) {
+      document.querySelectorAll('.preset-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+      });
+      currentStr = EXAMPLES[index];
+      steps = generateSteps(currentStr);
+      currentStepIdx = 0;
+      renderDisplay();
+    }
+
+    function nextStep() {
+      if (currentStepIdx < steps.length - 1) {
+        currentStepIdx++;
+        renderDisplay();
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIdx > 0) {
+        currentStepIdx--;
+        renderDisplay();
+      }
+    }
+
+    function resetVisualizer() {
+      currentStepIdx = 0;
+      renderDisplay();
+    }
+
+    // İlk başlatma
+    loadExample(0);
+  </script>
+</body>
+</html>
