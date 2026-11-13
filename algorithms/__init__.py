@@ -4,6 +4,7 @@ from algorithms.two_sum import two_sum
 from algorithms.binary_search import binary_search
 from algorithms.buy_sell_stock import max_profit
 from algorithms.valid_palindrome import is_palindrome
+from algorithms.reverse_linked_list import reverse_linked_list
 
 __all__ = [
     "is_valid_parentheses",
@@ -12,4 +13,5 @@ __all__ = [
     "binary_search",
     "max_profit",
     "is_palindrome",
+    "reverse_linked_list",
 ]

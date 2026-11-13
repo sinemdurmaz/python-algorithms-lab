@@ -14,6 +14,17 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **04** | **Binary Search** | [Binary Search (LeetCode #704)](algorithms/binary_search.py) | Kolay | $O(\log N)$ | $O(1)$ | `28/28 PASSED` ✅ |
 | **05** | **Greedy & Arrays** | [Best Time to Buy and Sell Stock (LeetCode #121)](algorithms/buy_sell_stock.py) | Kolay | $O(N)$ | $O(1)$ | `37/37 PASSED` ✅ |
 | **06** | **Two Pointers & Strings** | [Valid Palindrome (LeetCode #125)](algorithms/valid_palindrome.py) | Kolay | $O(N)$ | $O(1)$ | `53/53 PASSED` ✅ |
+| **07** | **Linked Lists** | [ListNode & LinkedList](data_structures/linked_list.py) & [Reverse Linked List (LeetCode #206)](algorithms/reverse_linked_list.py) | Kolay | $O(N)$ | $O(1)$ | `61/61 PASSED` ✅ |
+
+---
+
+## 🔗 Gün 7: Singly Linked List & In-Place Reversal
+
+* **Veri Yapısı:** `data_structures/linked_list.py`
+  * `ListNode[T]` ve `LinkedList[T]` sınıfları. Düğümler bellekte dağınık tutulur ve işaretçilerle birbirine bağlanır.
+* **Algoritma:** `algorithms/reverse_linked_list.py`
+  * `prev`, `curr`, `next_node` üçlü işaretçi mantığıyla hiçbir yeni düğüm oluşturmadan ($O(1)$ ek bellek) bağlantıları tersine çeviren $O(N)$ zamanlı in-place algoritma.
+* **Görsel Rehber:** [linked_list_rehberi.html](linked_list_rehberi.html)
 
 ---
 

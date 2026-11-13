@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Singly Linked List & Reversal Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border-radius: 9999px;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .feature-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .feature-title {
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Interactive Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .nodes-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 2.5rem 1rem 3rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      overflow-x: auto;
+      min-height: 140px;
+    }
+
+    .node-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    .node-box {
+      width: 68px;
+      height: 68px;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-family: monospace;
+      font-size: 1.25rem;
+      font-weight: 800;
+      transition: all 0.3s ease;
+    }
+
+    .node-box .node-idx {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      position: absolute;
+      top: 4px;
+    }
+
+    .node-box.is-curr {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.2);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+      transform: translateY(-6px);
+    }
+    .node-box.is-curr::after {
+      content: "CURR";
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+    }
+
+    .node-box.is-prev {
+      border-color: var(--accent-green);
+      background: rgba(34, 197, 94, 0.2);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+    }
+    .node-box.is-prev::after {
+      content: "PREV";
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--accent-green);
+    }
+
+    .node-box.is-next {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.15);
+    }
+    .node-box.is-next::after {
+      content: "NEXT";
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+    }
+
+    .arrow {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .arrow.reversed {
+      color: var(--accent-green);
+      transform: scaleX(-1);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-purple);
+      color: #fff;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 07 &bull; Data Structures &bull; LeetCode #206</div>
+      <h1>Singly Linked List & In-Place Reversal</h1>
+      <p class="subtitle">
+        Düğümlerin işaretçilerini bellekte kopyalamadan ($O(1)$ Space), üç işaretçi iterasyonuyla tersine çevirme sanatı.
+      </p>
+    </header>
+
+    <!-- Temel Karşılaştırma -->
+    <div class="grid-2">
+      <div class="feature-box">
+        <div class="feature-title">📦 Neden Bağlı Liste (Linked List)?</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Diziler (Array) bellekte ardışık bloklar talep ederken; bağlı liste her düğümü bağımsız olarak RAM'in herhangi bir yerine yerleştirir ve <code>next</code> işaretçisi ile bağlar. Başa ekleme (<code>prepend</code>) dizilerde $O(N)$ iken bağlı listede <strong>$O(1)$</strong>'dir.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <div class="feature-title">🔄 Üç İşaretçi Tekniği (Three Pointers)</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Bir bağlı listeyi tersine çevirirken kopya oluşturmak yerine <code>prev</code>, <code>curr</code> ve <code>next_node</code> olmak üzere üç değişken tutulur. Her adımda işaretçinin yönü ters çevrilir. Ekstra alan: <strong>$O(1)$</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- İnteraktif Simülatör -->
+    <div class="card">
+      <h2>🎮 İnteraktif İşaretçi Yönlendirme Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        <strong>"Sonraki Adım"</strong> butonuna basarak <code>prev</code>, <code>curr</code> ve <code>next_node</code> işaretçilerinin nasıl hareket ettiğini ve okların nasıl yön değiştirdiğini izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <div id="nodesTrack" class="nodes-track"></div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">0</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. "Sonraki Adım" butonuna basarak ters çevirme sürecini başlatın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/reverse_linked_list.py</h2>
+      <pre><code>def reverse_linked_list(head: Optional[ListNode[T]]) -> Optional[ListNode[T]]:
+    prev: Optional[ListNode[T]] = None
+    curr: Optional[ListNode[T]] = head
+
+    while curr is not None:
+        next_node = curr.next  # 1. Gelecek düğümü sakla
+        curr.next = prev       # 2. İşaretçiyi geriye çevir
+        prev = curr            # 3. prev'i bir adım ilerlet
+        curr = next_node       # 4. curr'ı bir adım ilerlet
+
+    return prev  # Yeni baş düğüm (Head)</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 7 Streak
+    </footer>
+  </div>
+
+  <script>
+    const INITIAL_VALUES = [1, 2, 3, 4, 5];
+    let steps = [];
+    let currentStepIdx = 0;
+
+    function buildSteps() {
+      const list = [...INITIAL_VALUES];
+      const s = [];
+
+      // Initial
+      s.push({
+        prevIdx: -1,
+        currIdx: 0,
+        nextIdx: 1,
+        reversedUpTo: -1,
+        log: "Başlangıç: prev = None, curr = Düğüm 1, next_node = Düğüm 2"
+      });
+
+      for (let i = 0; i < list.length; i++) {
+        // Step A: Save next
+        s.push({
+          prevIdx: i - 1,
+          currIdx: i,
+          nextIdx: i + 1 < list.length ? i + 1 : -1,
+          reversedUpTo: i - 1,
+          log: `Adım ${i+1}.1: next_node = curr.next (Düğüm ${i+1} referansı saklandı)`
+        });
+
+        // Step B: Reverse pointer
+        s.push({
+          prevIdx: i - 1,
+          currIdx: i,
+          nextIdx: i + 1 < list.length ? i + 1 : -1,
+          reversedUpTo: i,
+          log: `Adım ${i+1}.2: curr.next = prev (Düğüm ${list[i]} artık ${i === 0 ? 'None' : 'Düğüm ' + list[i-1]}'i gösteriyor!)`
+        });
+
+        // Step C: Advance prev & curr
+        s.push({
+          prevIdx: i,
+          currIdx: i + 1 < list.length ? i + 1 : -1,
+          nextIdx: i + 2 < list.length ? i + 2 : -1,
+          reversedUpTo: i,
+          log: `Adım ${i+1}.3: prev = curr, curr = next_node (İşaretçiler birer adım kaydırıldı)`
+        });
+      }
+
+      s.push({
+        prevIdx: list.length - 1,
+        currIdx: -1,
+        nextIdx: -1,
+        reversedUpTo: list.length - 1,
+        log: "🎉 TAMAMLANDI! curr = None oldu. Yeni listenin başı (Head): Düğüm " + list[list.length - 1]
+      });
+
+      return s;
+    }
+
+    function render() {
+      const container = document.getElementById('nodesTrack');
+      container.innerHTML = '';
+      const state = steps[currentStepIdx];
+
+      // None box at start for prev
+      const nullNodeLeft = document.createElement('div');
+      nullNodeLeft.className = 'node-box';
+      nullNodeLeft.style.borderColor = '#334155';
+      nullNodeLeft.style.color = '#64748b';
+      nullNodeLeft.innerHTML = '<span class="node-idx">NULL</span>None';
+      if (state.prevIdx === -1) {
+        nullNodeLeft.classList.add('is-prev');
+      }
+      container.appendChild(nullNodeLeft);
+
+      INITIAL_VALUES.forEach((val, i) => {
+        // Arrow
+        const arrow = document.createElement('div');
+        arrow.className = 'arrow';
+        if (i <= state.reversedUpTo) {
+          arrow.classList.add('reversed');
+          arrow.innerHTML = '&larr;';
+        } else {
+          arrow.innerHTML = '&rarr;';
+        }
+        container.appendChild(arrow);
+
+        // Node
+        const node = document.createElement('div');
+        node.className = 'node-box';
+        node.innerHTML = `<span class="node-idx">[${i}]</span>${val}`;
+
+        if (i === state.prevIdx) node.classList.add('is-prev');
+        if (i === state.currIdx) node.classList.add('is-curr');
+        if (i === state.nextIdx) node.classList.add('is-next');
+
+        container.appendChild(node);
+      });
+
+      // Right None
+      const arrowEnd = document.createElement('div');
+      arrowEnd.className = 'arrow';
+      arrowEnd.innerHTML = state.reversedUpTo >= INITIAL_VALUES.length - 1 ? '&larr;' : '&rarr;';
+      container.appendChild(arrowEnd);
+
+      const nullNodeRight = document.createElement('div');
+      nullNodeRight.className = 'node-box';
+      nullNodeRight.style.borderColor = '#334155';
+      nullNodeRight.style.color = '#64748b';
+      nullNodeRight.innerHTML = '<span class="node-idx">NULL</span>None';
+      if (state.currIdx === -1) {
+        nullNodeRight.classList.add('is-curr');
+      }
+      container.appendChild(nullNodeRight);
+
+      document.getElementById('stepCounter').textContent = currentStepIdx;
+      document.getElementById('totalSteps').textContent = steps.length - 1;
+      document.getElementById('prevBtn').disabled = currentStepIdx === 0;
+      document.getElementById('nextBtn').disabled = currentStepIdx === steps.length - 1;
+      document.getElementById('logBox').textContent = state.log;
+    }
+
+    function nextStep() {
+      if (currentStepIdx < steps.length - 1) {
+        currentStepIdx++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIdx > 0) {
+        currentStepIdx--;
+        render();
+      }
+    }
+
+    function resetSim() {
+      currentStepIdx = 0;
+      render();
+    }
+
+    steps = buildSteps();
+    render();
+  </script>
+</body>
+</html>
