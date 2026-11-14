@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Floyd's Cycle Detection Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(20, 184, 166, 0.15);
+      color: var(--accent-teal);
+      border-radius: 9999px;
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .comparison-box {
+      border-radius: 8px;
+      padding: 1.25rem;
+      height: 100%;
+    }
+    .box-bad {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+    }
+    .box-good {
+      background: rgba(20, 184, 166, 0.08);
+      border: 1px solid rgba(20, 184, 166, 0.25);
+    }
+    .comparison-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .box-bad .comparison-title { color: var(--accent-rose); }
+    .box-good .comparison-title { color: var(--accent-teal); }
+
+    .tag-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .tag-bad { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); }
+    .tag-good { background: rgba(20, 184, 166, 0.2); color: var(--accent-teal); }
+
+    /* Interactive Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .preset-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .preset-btn {
+      background: var(--card-hover);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      background: var(--accent-teal);
+      color: #090d16;
+      font-weight: 700;
+      border-color: var(--accent-teal);
+    }
+
+    .track-canvas {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 2rem 1rem 3rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      min-height: 140px;
+    }
+
+    .node-item {
+      width: 64px;
+      height: 64px;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      transition: all 0.3s ease;
+    }
+
+    .node-item .node-idx {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      position: absolute;
+      top: 4px;
+    }
+
+    .node-item.is-slow {
+      border-color: var(--accent-green);
+      background: rgba(34, 197, 94, 0.2);
+      transform: translateY(-4px);
+    }
+    .node-item.is-slow::after {
+      content: "🐢 SLOW";
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    .node-item.is-fast {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.2);
+      transform: translateY(-4px);
+    }
+    .node-item.is-fast::after {
+      content: "🐇 FAST";
+      position: absolute;
+      bottom: -22px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+      white-space: nowrap;
+    }
+
+    .node-item.is-slow.is-fast {
+      border-color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.3);
+      box-shadow: 0 0 18px rgba(244, 63, 94, 0.6);
+      transform: scale(1.1) translateY(-4px);
+      animation: pulse 0.7s infinite alternate;
+    }
+    .node-item.is-slow.is-fast::after {
+      content: "💥 BULUŞMA!";
+      color: var(--accent-rose);
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1.05); }
+      to { transform: scale(1.15); }
+    }
+
+    .arrow {
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .loop-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px dashed var(--accent-purple);
+      color: var(--accent-purple);
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-teal);
+      color: #090d16;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 08 &bull; Fast & Slow Pointers &bull; LeetCode #141</div>
+      <h1>Floyd's Tortoise and Hare ile Döngü Tespiti</h1>
+      <p class="subtitle">
+        Kaplumbağa (1 adım) ve Tavşan (2 adım) işaretçileriyle döngülü bağlı listelerde sonsuz döngüye düşmeden $O(1)$ bellekle tespit.
+      </p>
+    </header>
+
+    <!-- Karşılaştırma -->
+    <div class="grid-2">
+      <div class="comparison-box box-bad">
+        <div class="comparison-title">
+          <span>❌ HashSet (Görülen Düğümler Kümesi)</span>
+          <span class="tag-badge tag-bad">O(N) Alan / Ek Bellek</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Ziyaret edilen her düğümü bir Python <code>set</code> kümesinde saklar. Liste çok uzadığında RAM tüketimi $O(N)$ olur.
+        </p>
+      </div>
+
+      <div class="comparison-box box-good">
+        <div class="comparison-title">
+          <span>✅ Floyd's Tortoise and Hare</span>
+          <span class="tag-badge tag-good">O(1) Alan / Sabit Bellek</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Yalnızca <code>slow</code> ve <code>fast</code> adlı iki referans tutar. Dairesel bir pistte hızlı koşan er ya da geç yavaş koşana tur bindirir!
+        </p>
+      </div>
+    </div>
+
+    <!-- İnteraktif Simülatör -->
+    <div class="card">
+      <h2>🎮 İnteraktif Kaplumbağa & Tavşan Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Bir senaryo seçip <strong>"Sonraki Adım"</strong> butonuna basarak iki işaretçinin yarışını canlı izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <div class="preset-buttons">
+          <button class="preset-btn active" onclick="loadPreset(0)">Döngülü Liste [3 -> 2 -> 0 -> -4 -> 2]</button>
+          <button class="preset-btn" onclick="loadPreset(1)">Düz Doğrusal Liste [1 -> 2 -> 3 -> 4 -> 5 -> None]</button>
+          <button class="preset-btn" onclick="loadPreset(2)">2 Elemanlı Döngü [1 -> 2 -> 1]</button>
+        </div>
+
+        <div id="trackCanvas" class="track-canvas"></div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">0</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. "Sonraki Adım" butonuna basarak yarışı başlatın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/has_cycle.py</h2>
+      <pre><code>def has_cycle(head: Optional[ListNode[T]]) -> bool:
+    if head is None or head.next is None:
+        return False
+
+    slow = head  # 1 adım (Kaplumbağa)
+    fast = head  # 2 adım (Tavşan)
+
+    while fast is not None and fast.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+
+        if slow is fast:
+            return True  # Döngü bulundu!
+
+    return False  # fast None'a ulaştı -> Döngü yok</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 8 Streak
+    </footer>
+  </div>
+
+  <script>
+    const PRESETS = [
+      {
+        values: [3, 2, 0, -4],
+        cycleTo: 1, // -4 -> 2
+        name: "Döngülü Liste"
+      },
+      {
+        values: [1, 2, 3, 4, 5],
+        cycleTo: -1, // Linear
+        name: "Düz Liste"
+      },
+      {
+        values: [1, 2],
+        cycleTo: 0, // 2 -> 1
+        name: "2 Elemanlı Döngü"
+      }
+    ];
+
+    let currentPreset = PRESETS[0];
+    let steps = [];
+    let currentStepIdx = 0;
+
+    function buildSteps(preset) {
+      const s = [];
+      const len = preset.values.length;
+      let slow = 0;
+      let fast = 0;
+
+      function getNext(idx) {
+        if (idx === len - 1) return preset.cycleTo;
+        if (idx >= 0 && idx < len - 1) return idx + 1;
+        return -1;
+      }
+
+      s.push({
+        slow,
+        fast,
+        status: 'init',
+        log: `Başlangıç: Her iki işaretçi de Head düğümünde (Düğüm ${preset.values[0]}).`
+      });
+
+      let iteration = 0;
+      while (true) {
+        iteration++;
+        const nextFast1 = getNext(fast);
+        const nextFast2 = nextFast1 !== -1 ? getNext(nextFast1) : -1;
+        const nextSlow = getNext(slow);
+
+        if (nextFast1 === -1 || nextFast2 === -1) {
+          s.push({
+            slow: nextSlow,
+            fast: -1,
+            status: 'no-cycle',
+            log: `🏁 Tavşan (fast) listenin sonuna (None) ulaştı! Bu bağlı listede DÖNGÜ YOKTUR.`
+          });
+          break;
+        }
+
+        slow = nextSlow;
+        fast = nextFast2;
+
+        if (slow === fast) {
+          s.push({
+            slow,
+            fast,
+            status: 'cycle-found',
+            log: `💥 KESİŞİM TESPİT EDİLDİ! Adım ${iteration}: Tavşan kaplumbağayı Düğüm ${preset.values[slow]}'de yakaladı. DÖNGÜ VAR (True)!`
+          });
+          break;
+        } else {
+          s.push({
+            slow,
+            fast,
+            status: 'running',
+            log: `Adım ${iteration}: Kaplumbağa 1 adım ilerledi -> Düğüm ${preset.values[slow]} | Tavşan 2 adım ilerledi -> Düğüm ${preset.values[fast]}`
+          });
+        }
+
+        if (iteration > 20) break; // Emniyet
+      }
+
+      return s;
+    }
+
+    function render() {
+      const container = document.getElementById('trackCanvas');
+      container.innerHTML = '';
+      const state = steps[currentStepIdx];
+
+      currentPreset.values.forEach((val, idx) => {
+        const node = document.createElement('div');
+        node.className = 'node-item';
+        node.innerHTML = `<span class="node-idx">[${idx}]</span>${val}`;
+
+        if (idx === state.slow) node.classList.add('is-slow');
+        if (idx === state.fast) node.classList.add('is-fast');
+
+        container.appendChild(node);
+
+        if (idx < currentPreset.values.length - 1) {
+          const arrow = document.createElement('div');
+          arrow.className = 'arrow';
+          arrow.innerHTML = '&rarr;';
+          container.appendChild(arrow);
+        }
+      });
+
+      if (currentPreset.cycleTo >= 0) {
+        const loopTag = document.createElement('span');
+        loopTag.className = 'loop-badge';
+        loopTag.textContent = `↩️ Döngü: [${currentPreset.values.length - 1}] -> [${currentPreset.cycleTo}]`;
+        container.appendChild(loopTag);
+      } else {
+        const endTag = document.createElement('span');
+        endTag.className = 'arrow';
+        endTag.style.color = '#64748b';
+        endTag.innerHTML = '&rarr; None';
+        container.appendChild(endTag);
+      }
+
+      document.getElementById('stepCounter').textContent = currentStepIdx;
+      document.getElementById('totalSteps').textContent = steps.length - 1;
+      document.getElementById('prevBtn').disabled = currentStepIdx === 0;
+      document.getElementById('nextBtn').disabled = currentStepIdx === steps.length - 1;
+
+      const logBox = document.getElementById('logBox');
+      logBox.textContent = state.log;
+      if (state.status === 'cycle-found') {
+        logBox.style.color = 'var(--accent-rose)';
+      } else if (state.status === 'no-cycle') {
+        logBox.style.color = 'var(--accent-green)';
+      } else {
+        logBox.style.color = 'var(--accent-teal)';
+      }
+    }
+
+    function loadPreset(idx) {
+      document.querySelectorAll('.preset-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      currentPreset = PRESETS[idx];
+      steps = buildSteps(currentPreset);
+      currentStepIdx = 0;
+      render();
+    }
+
+    function nextStep() {
+      if (currentStepIdx < steps.length - 1) {
+        currentStepIdx++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIdx > 0) {
+        currentStepIdx--;
+        render();
+      }
+    }
+
+    function resetSim() {
+      currentStepIdx = 0;
+      render();
+    }
+
+    loadPreset(0);
+  </script>
+</body>
+</html>

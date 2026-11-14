@@ -5,6 +5,7 @@ from algorithms.binary_search import binary_search
 from algorithms.buy_sell_stock import max_profit
 from algorithms.valid_palindrome import is_palindrome
 from algorithms.reverse_linked_list import reverse_linked_list
+from algorithms.has_cycle import has_cycle
 
 __all__ = [
     "is_valid_parentheses",
@@ -14,4 +15,5 @@ __all__ = [
     "max_profit",
     "is_palindrome",
     "reverse_linked_list",
+    "has_cycle",
 ]

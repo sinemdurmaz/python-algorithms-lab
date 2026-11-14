@@ -15,6 +15,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **05** | **Greedy & Arrays** | [Best Time to Buy and Sell Stock (LeetCode #121)](algorithms/buy_sell_stock.py) | Kolay | $O(N)$ | $O(1)$ | `37/37 PASSED` ✅ |
 | **06** | **Two Pointers & Strings** | [Valid Palindrome (LeetCode #125)](algorithms/valid_palindrome.py) | Kolay | $O(N)$ | $O(1)$ | `53/53 PASSED` ✅ |
 | **07** | **Linked Lists** | [ListNode & LinkedList](data_structures/linked_list.py) & [Reverse Linked List (LeetCode #206)](algorithms/reverse_linked_list.py) | Kolay | $O(N)$ | $O(1)$ | `61/61 PASSED` ✅ |
+| **08** | **Fast & Slow Pointers** | [Linked List Cycle (LeetCode #141)](algorithms/has_cycle.py) (Floyd's Algorithm) | Kolay | $O(N)$ | $O(1)$ | `69/69 PASSED` ✅ |
+
+---
+
+## 🐢🐇 Gün 8: Linked List Cycle (Floyd's Tortoise & Hare)
+
+* **Algoritma:** `algorithms/has_cycle.py`
+  * Küme (HashSet) kullanmadan $O(1)$ ek bellekle, kaplumbağa (1 adım) ve tavşan (2 adım) işaretçileriyle bağlı listedeki sonsuz döngüleri tespit eden Floyd algoritması.
+* **Görsel Rehber:** [cycle_rehberi.html](cycle_rehberi.html)
 
 ---
 
