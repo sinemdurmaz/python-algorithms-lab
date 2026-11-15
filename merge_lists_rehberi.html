@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: İki Sıralı Listeyi Birleştirme Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border-radius: 9999px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .concept-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .concept-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent-amber);
+    }
+
+    /* Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: #070a12;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .list-label {
+      min-width: 80px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .node-box {
+      width: 52px;
+      height: 52px;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .node-box.active-l1 {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.25);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+    .node-box.active-l2 {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.25);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+    }
+    .node-box.merged {
+      border-color: var(--accent-green);
+      background: rgba(34, 197, 94, 0.2);
+    }
+    .node-box.dummy {
+      border-style: dashed;
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .arrow {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-blue);
+      color: #090d16;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 09 &bull; Linked Lists &bull; LeetCode #21</div>
+      <h1>Merge Two Sorted Lists & Dummy Head</h1>
+      <p class="subtitle">
+        İki sıralı bağlı listeyi sahte baş düğüm (Dummy Head) tekniğiyle $O(1)$ ek bellekte fermuar gibi birleştirme.
+      </p>
+    </header>
+
+    <div class="grid-2">
+      <div class="concept-box">
+        <div class="concept-title">🛡️ Dummy Head (Sahte Baş) Deseni</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Birleştirilen yeni listenin başı hangisi olacak? (list1 mi yoksa list2 mi?) sorusunu ortadan kaldırmak için geçici bir <code>dummy = ListNode(None)</code> oluşturulur. Listenin kuyruğu (<code>tail</code>) bu sahte başa bağlanır. Fonksiyon sonunda <code>dummy.next</code> dönülür.
+        </p>
+      </div>
+
+      <div class="concept-box">
+        <div class="concept-title">⚡ O(1) Bellek ile In-Place Splice</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Yeni düğüm nesneleri (<code>ListNode</code>) allocate edilmez! Bunun yerine mevcut düğümlerin <code>next</code> işaretçileri küçük olana doğru yeniden yönlendirilir. Bellek karmaşıklığı <strong>$O(1)$</strong>'dir.
+        </p>
+      </div>
+    </div>
+
+    <!-- İnteraktif Simülatör -->
+    <div class="card">
+      <h2>🎮 Canlı Fermuar Birleştirme Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        <strong>"Sonraki Adım"</strong> butonuna basarak iki listenin nasıl karşılaştırılıp birleştirilmiş listeye eklendiğini canlı izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <!-- List 1 -->
+        <div class="list-row">
+          <div class="list-label" style="color: var(--accent-blue);">Liste 1:</div>
+          <div id="l1Container" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        </div>
+
+        <!-- List 2 -->
+        <div class="list-row">
+          <div class="list-label" style="color: var(--accent-purple);">Liste 2:</div>
+          <div id="l2Container" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        </div>
+
+        <!-- Merged Result -->
+        <div class="list-row" style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2);">
+          <div class="list-label" style="color: var(--accent-green);">Birleşen:</div>
+          <div id="mergedContainer" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        </div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">0</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. Başlamak için "Sonraki Adım"a tıklayın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/merge_sorted_lists.py</h2>
+      <pre><code>def merge_two_sorted_lists(list1: Optional[ListNode[T]], list2: Optional[ListNode[T]]) -> Optional[ListNode[T]]:
+    dummy = ListNode(None)
+    tail = dummy
+
+    while list1 is not None and list2 is not None:
+        if list1.val <= list2.val:
+            tail.next = list1
+            list1 = list1.next
+        else:
+            tail.next = list2
+            list2 = list2.next
+        tail = tail.next
+
+    tail.next = list1 if list1 is not None else list2
+    return dummy.next</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 9 Streak
+    </footer>
+  </div>
+
+  <script>
+    const L1 = [1, 2, 4];
+    const L2 = [1, 3, 4];
+
+    let steps = [];
+    let currentStepIdx = 0;
+
+    function buildSteps() {
+      const s = [];
+      let i = 0;
+      let j = 0;
+      const merged = [];
+
+      s.push({
+        i: 0,
+        j: 0,
+        merged: [],
+        log: "Başlangıç: dummy oluşturuldu, tail = dummy. list1[0]=1, list2[0]=1 karşılaştırılıyor."
+      });
+
+      while (i < L1.length && j < L2.length) {
+        if (L1[i] <= L2[j]) {
+          merged.push(L1[i]);
+          s.push({
+            i: i + 1,
+            j: j,
+            merged: [...merged],
+            log: `list1 (${L1[i]}) <= list2 (${L2[j]}) -> Liste 1'den ${L1[i]} kuyruğa eklendi. list1 bir adım kaydı.`
+          });
+          i++;
+        } else {
+          merged.push(L2[j]);
+          s.push({
+            i: i,
+            j: j + 1,
+            merged: [...merged],
+            log: `list2 (${L2[j]}) < list1 (${L1[i]}) -> Liste 2'den ${L2[j]} kuyruğa eklendi. list2 bir adım kaydı.`
+          });
+          j++;
+        }
+      }
+
+      while (i < L1.length) {
+        merged.push(L1[i]);
+        s.push({
+          i: i + 1,
+          j: j,
+          merged: [...merged],
+          log: `Kalan list1 elemanı (${L1[i]}) doğrudan kuyruğa bağlandı.`
+        });
+        i++;
+      }
+
+      while (j < L2.length) {
+        merged.push(L2[j]);
+        s.push({
+          i: i,
+          j: j + 1,
+          merged: [...merged],
+          log: `Kalan list2 elemanı (${L2[j]}) doğrudan kuyruğa bağlandı.`
+        });
+        j++;
+      }
+
+      s.push({
+        i,
+        j,
+        merged: [...merged],
+        log: "🎉 Birleştirme tamamlandı! dummy.next döndürüldü: [1 -> 1 -> 2 -> 3 -> 4 -> 4]"
+      });
+
+      return s;
+    }
+
+    function render() {
+      const state = steps[currentStepIdx];
+
+      // Render L1
+      const l1El = document.getElementById('l1Container');
+      l1El.innerHTML = '';
+      L1.forEach((val, idx) => {
+        const box = document.createElement('div');
+        box.className = 'node-box';
+        box.textContent = val;
+        if (idx === state.i) box.classList.add('active-l1');
+        if (idx < state.i) box.style.opacity = '0.35';
+        l1El.appendChild(box);
+        if (idx < L1.length - 1) {
+          const a = document.createElement('span');
+          a.className = 'arrow';
+          a.innerHTML = '&rarr;';
+          l1El.appendChild(a);
+        }
+      });
+
+      // Render L2
+      const l2El = document.getElementById('l2Container');
+      l2El.innerHTML = '';
+      L2.forEach((val, idx) => {
+        const box = document.createElement('div');
+        box.className = 'node-box';
+        box.textContent = val;
+        if (idx === state.j) box.classList.add('active-l2');
+        if (idx < state.j) box.style.opacity = '0.35';
+        l2El.appendChild(box);
+        if (idx < L2.length - 1) {
+          const a = document.createElement('span');
+          a.className = 'arrow';
+          a.innerHTML = '&rarr;';
+          l2El.appendChild(a);
+        }
+      });
+
+      // Render Merged
+      const mEl = document.getElementById('mergedContainer');
+      mEl.innerHTML = '<div class="node-box dummy">DUMMY</div><span class="arrow">&rarr;</span>';
+      state.merged.forEach((val, idx) => {
+        const box = document.createElement('div');
+        box.className = 'node-box merged';
+        box.textContent = val;
+        mEl.appendChild(box);
+        if (idx < state.merged.length - 1) {
+          const a = document.createElement('span');
+          a.className = 'arrow';
+          a.innerHTML = '&rarr;';
+          mEl.appendChild(a);
+        }
+      });
+
+      document.getElementById('stepCounter').textContent = currentStepIdx;
+      document.getElementById('totalSteps').textContent = steps.length - 1;
+      document.getElementById('prevBtn').disabled = currentStepIdx === 0;
+      document.getElementById('nextBtn').disabled = currentStepIdx === steps.length - 1;
+      document.getElementById('logBox').textContent = state.log;
+    }
+
+    function nextStep() {
+      if (currentStepIdx < steps.length - 1) {
+        currentStepIdx++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIdx > 0) {
+        currentStepIdx--;
+        render();
+      }
+    }
+
+    function resetSim() {
+      currentStepIdx = 0;
+      render();
+    }
+
+    steps = buildSteps();
+    render();
+  </script>
+</body>
+</html>

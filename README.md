@@ -16,6 +16,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **06** | **Two Pointers & Strings** | [Valid Palindrome (LeetCode #125)](algorithms/valid_palindrome.py) | Kolay | $O(N)$ | $O(1)$ | `53/53 PASSED` ✅ |
 | **07** | **Linked Lists** | [ListNode & LinkedList](data_structures/linked_list.py) & [Reverse Linked List (LeetCode #206)](algorithms/reverse_linked_list.py) | Kolay | $O(N)$ | $O(1)$ | `61/61 PASSED` ✅ |
 | **08** | **Fast & Slow Pointers** | [Linked List Cycle (LeetCode #141)](algorithms/has_cycle.py) (Floyd's Algorithm) | Kolay | $O(N)$ | $O(1)$ | `69/69 PASSED` ✅ |
+| **09** | **Linked Lists & Splice** | [Merge Two Sorted Lists (LeetCode #21)](algorithms/merge_sorted_lists.py) (Dummy Head) | Kolay | $O(N + M)$ | $O(1)$ | `76/76 PASSED` ✅ |
+
+---
+
+## ⚡ Gün 9: Merge Two Sorted Lists (Dummy Head & Splice)
+
+* **Algoritma:** `algorithms/merge_sorted_lists.py`
+  * Sahte baş düğüm (Dummy Head) deseniyle sınır durumları temizce yöneten ve yeni düğüm tahsis etmeden ($O(1)$ ek bellek) iki sıralı bağlı listeyi fermuar gibi birleştiren $O(N + M)$ zamanlı algoritma.
+* **Görsel Rehber:** [merge_lists_rehberi.html](merge_lists_rehberi.html)
 
 ---
 

@@ -6,6 +6,7 @@ from algorithms.buy_sell_stock import max_profit
 from algorithms.valid_palindrome import is_palindrome
 from algorithms.reverse_linked_list import reverse_linked_list
 from algorithms.has_cycle import has_cycle
+from algorithms.merge_sorted_lists import merge_two_sorted_lists
 
 __all__ = [
     "is_valid_parentheses",
@@ -16,4 +17,5 @@ __all__ = [
     "is_palindrome",
     "reverse_linked_list",
     "has_cycle",
+    "merge_two_sorted_lists",
 ]
