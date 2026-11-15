@@ -17,6 +17,17 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **07** | **Linked Lists** | [ListNode & LinkedList](data_structures/linked_list.py) & [Reverse Linked List (LeetCode #206)](algorithms/reverse_linked_list.py) | Kolay | $O(N)$ | $O(1)$ | `61/61 PASSED` ✅ |
 | **08** | **Fast & Slow Pointers** | [Linked List Cycle (LeetCode #141)](algorithms/has_cycle.py) (Floyd's Algorithm) | Kolay | $O(N)$ | $O(1)$ | `69/69 PASSED` ✅ |
 | **09** | **Linked Lists & Splice** | [Merge Two Sorted Lists (LeetCode #21)](algorithms/merge_sorted_lists.py) (Dummy Head) | Kolay | $O(N + M)$ | $O(1)$ | `76/76 PASSED` ✅ |
+| **10** | **Binary Trees** | [TreeNode & BinaryTree](data_structures/binary_tree.py) & [Invert Binary Tree (LeetCode #226)](algorithms/invert_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `85/85 PASSED` ✅ |
+
+---
+
+## 🌳 Gün 10: Binary Tree & Invert Binary Tree (Ayna Yansıması)
+
+* **Veri Yapısı:** `data_structures/binary_tree.py`
+  * Generic `TreeNode[T]` ve `BinaryTree[T]` hiyerarşik veri yapısı. BFS seviye sırası (`from_level_order`, `to_level_order`) desteği.
+* **Algoritma:** `algorithms/invert_binary_tree.py`
+  * Özyinelemeli (DFS) mantıkla sol ve sağ alt ağaçları ayna simetrisiyle takas eden klasik $O(N)$ zamanlı algoritma.
+* **Görsel Rehber:** [binary_tree_rehberi.html](binary_tree_rehberi.html)
 
 ---
 

@@ -7,6 +7,7 @@ from algorithms.valid_palindrome import is_palindrome
 from algorithms.reverse_linked_list import reverse_linked_list
 from algorithms.has_cycle import has_cycle
 from algorithms.merge_sorted_lists import merge_two_sorted_lists
+from algorithms.invert_binary_tree import invert_tree
 
 __all__ = [
     "is_valid_parentheses",
@@ -18,4 +19,5 @@ __all__ = [
     "reverse_linked_list",
     "has_cycle",
     "merge_two_sorted_lists",
+    "invert_tree",
 ]

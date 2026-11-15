@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: İkili Ağacı Tersine Çevirme Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border-radius: 9999px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .story-box {
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .story-title {
+      font-weight: 700;
+      color: var(--accent-purple);
+      margin-bottom: 0.5rem;
+    }
+
+    .algo-box {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .algo-title {
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Tree Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .tree-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem 1rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      min-height: 240px;
+    }
+
+    .tree-level {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      width: 100%;
+    }
+
+    .tree-level.level-1 { gap: 6rem; }
+    .tree-level.level-2 { gap: 1.5rem; }
+
+    .tree-node {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .tree-node.is-root {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.25);
+      color: #fff;
+    }
+
+    .tree-node.is-left {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.2);
+    }
+
+    .tree-node.is-right {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.2);
+    }
+
+    .tree-node.swapping {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+      border-color: var(--accent-rose);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-amber);
+      color: #090d16;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 10 &bull; Trees &bull; LeetCode #226</div>
+      <h1>İkili Ağacı Tersine Çevirme (Invert Binary Tree)</h1>
+      <p class="subtitle">
+        Homebrew yaratıcısının meşhur mülakat problemi: Özyinelemeli (DFS) ayna yansıması algoritması.
+      </p>
+    </header>
+
+    <div class="grid-2">
+      <div class="story-box">
+        <div class="story-title">☕ Max Howell ve Tarihi Tweet</div>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">
+          <em>"Google: Mühendislerimizin %90'ı yazdığın yazılımı (Homebrew) kullanıyor, ancak beyaz tahtada bir ikili ağacı tersine çeviremedin, o yüzden güle güle."</em><br>
+          Bu soru yazılım dünyasında en çok konuşulan ağaç algoritmalarından biridir!
+        </p>
+      </div>
+
+      <div class="algo-box">
+        <div class="algo-title">🪞 DFS Ayna Yansıması Mantığı</div>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">
+          Ağacın kökünden başlanarak her düğümün sol ve sağ çocukları ters çevrilmiş halleriyle takas edilir:
+          <code>root.left, root.right = invert_tree(root.right), invert_tree(root.left)</code>.
+          Zaman: <strong>$O(N)$</strong>, Alan: <strong>$O(H)$</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Canlı Simülatör -->
+    <div class="card">
+      <h2>🎮 Canlı İkili Ağaç Ayna Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        <strong>"Sonraki Adım"</strong> butonuna basarak ağacın önce alt dallarının, sonra ana kökünün nasıl ters döndüğünü izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <div class="tree-stage">
+          <!-- Level 0: Root -->
+          <div class="tree-level level-0">
+            <div id="node-4" class="tree-node is-root">4</div>
+          </div>
+
+          <!-- Level 1 -->
+          <div class="tree-level level-1">
+            <div id="node-2" class="tree-node is-left">2</div>
+            <div id="node-7" class="tree-node is-right">7</div>
+          </div>
+
+          <!-- Level 2 -->
+          <div class="tree-level level-2">
+            <div id="node-1" class="tree-node is-left">1</div>
+            <div id="node-3" class="tree-node is-left">3</div>
+            <div id="node-6" class="tree-node is-right">6</div>
+            <div id="node-9" class="tree-node is-right">9</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">3</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Ağaç orijinal durumunda: [4, 2, 7, 1, 3, 6, 9]. Başlamak için "Sonraki Adım"a tıklayın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/invert_binary_tree.py</h2>
+      <pre><code>def invert_tree(root: Optional[TreeNode[T]]) -> Optional[TreeNode[T]]:
+    if root is None:
+        return None
+
+    # Sol ve sağ alt dalları özyinelemeli ters çevir ve takas et
+    root.left, root.right = invert_tree(root.right), invert_tree(root.left)
+    return root</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 10 Milestone 🏆
+    </footer>
+  </div>
+
+  <script>
+    let step = 0;
+
+    const steps = [
+      {
+        tree: { l1: [2, 7], l2: [1, 3, 6, 9] },
+        log: "Başlangıç: Orijinal Ağaç. Kök=4, Sol Dal=[2, 1, 3], Sağ Dal=[7, 6, 9]"
+      },
+      {
+        tree: { l1: [2, 7], l2: [3, 1, 6, 9] },
+        log: "Adım 1: Sol alt ağaçta (2) çocuklar takas edildi -> [3, 1]"
+      },
+      {
+        tree: { l1: [2, 7], l2: [3, 1, 9, 6] },
+        log: "Adım 2: Sağ alt ağaçta (7) çocuklar takas edildi -> [9, 6]"
+      },
+      {
+        tree: { l1: [7, 2], l2: [9, 6, 3, 1] },
+        log: "🎉 Adım 3 (Final): Kökün (4) sağ ve sol dalları takas edildi! Yeni Ağaç: [4, 7, 2, 9, 6, 3, 1]"
+      }
+    ];
+
+    function render() {
+      const s = steps[step];
+      document.getElementById('node-2').textContent = s.tree.l1[0];
+      document.getElementById('node-7').textContent = s.tree.l1[1];
+
+      document.getElementById('node-1').textContent = s.tree.l2[0];
+      document.getElementById('node-3').textContent = s.tree.l2[1];
+      document.getElementById('node-6').textContent = s.tree.l2[2];
+      document.getElementById('node-9').textContent = s.tree.l2[3];
+
+      document.getElementById('stepCounter').textContent = step;
+      document.getElementById('prevBtn').disabled = step === 0;
+      document.getElementById('nextBtn').disabled = step === steps.length - 1;
+      document.getElementById('logBox').textContent = s.log;
+    }
+
+    function nextStep() {
+      if (step < steps.length - 1) {
+        step++;
+        render();
+      }
+    }
+
+    function prevStep() {
+      if (step > 0) {
+        step--;
+        render();
+      }
+    }
+
+    function resetSim() {
+      step = 0;
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
