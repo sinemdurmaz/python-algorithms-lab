@@ -18,6 +18,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **08** | **Fast & Slow Pointers** | [Linked List Cycle (LeetCode #141)](algorithms/has_cycle.py) (Floyd's Algorithm) | Kolay | $O(N)$ | $O(1)$ | `69/69 PASSED` ✅ |
 | **09** | **Linked Lists & Splice** | [Merge Two Sorted Lists (LeetCode #21)](algorithms/merge_sorted_lists.py) (Dummy Head) | Kolay | $O(N + M)$ | $O(1)$ | `76/76 PASSED` ✅ |
 | **10** | **Binary Trees** | [TreeNode & BinaryTree](data_structures/binary_tree.py) & [Invert Binary Tree (LeetCode #226)](algorithms/invert_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `85/85 PASSED` ✅ |
+| **11** | **Binary Trees & DFS** | [Maximum Depth of Binary Tree (LeetCode #104)](algorithms/max_depth_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `91/91 PASSED` ✅ |
+
+---
+
+## 📏 Gün 11: Maximum Depth of Binary Tree (Ağaç Yüksekliği)
+
+* **Algoritma:** `algorithms/max_depth_binary_tree.py`
+  * Özyinelemeli (DFS) mantıkla kökten en uzak yaprak düğüme kadar olan yolu hesaplayan $O(N)$ zamanlı $O(H)$ alanlı klasik algoritma.
+* **Görsel Rehber:** [max_depth_rehberi.html](max_depth_rehberi.html)
 
 ---
 

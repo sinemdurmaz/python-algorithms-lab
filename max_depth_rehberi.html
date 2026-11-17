@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: İkili Ağaç Maksimum Derinlik Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border-radius: 9999px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .concept-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .concept-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent-teal);
+    }
+
+    /* Tree Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .tree-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem 1rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      min-height: 250px;
+    }
+
+    .level-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .depth-label {
+      position: absolute;
+      left: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .tree-node {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      transition: all 0.3s ease;
+    }
+
+    .tree-node.highlight {
+      border-color: var(--accent-green);
+      background: rgba(34, 197, 94, 0.25);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+      transform: scale(1.1);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-blue);
+      color: #090d16;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 11 &bull; Binary Trees &bull; LeetCode #104</div>
+      <h1>Maximum Depth of Binary Tree</h1>
+      <p class="subtitle">
+        Özyinelemeli (DFS) mantıkla kökten en uzak yaprak düğüme kadar olan derinliği $O(N)$ zamanda hesaplama.
+      </p>
+    </header>
+
+    <div class="grid-2">
+      <div class="concept-box">
+        <div class="concept-title">🌳 Derinlik (Depth) Formülü</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Bir düğümün derinliği: <code>1 + max(sol_dal_derinliği, sağ_dal_derinliği)</code> formülüyle hesaplanır. Düğüm boş (<code>None</code>) ise derinlik 0'dır.
+        </p>
+      </div>
+
+      <div class="concept-box">
+        <div class="concept-title">⚡ Karmaşıklık Analizi</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Ağaçtaki her düğüm tam bir kez ziyaret edildiği için <strong>Zaman: $O(N)$</strong>; çağrı yığınında tutulan en yüksek çağrı sayısı ağaç yüksekliği kadar olduğundan <strong>Alan: $O(H)$</strong>'dir.
+        </p>
+      </div>
+    </div>
+
+    <!-- Canlı Simülatör -->
+    <div class="card">
+      <h2>🎮 Canlı Ağaç Derinlik Simülatörü</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Örnek Ağaç: <code>[3, 9, 20, null, null, 15, 7]</code>. Adım adım DFS taramasını izleyin:
+      </p>
+
+      <div class="visualizer-container">
+        <div class="tree-stage">
+          <div class="level-row">
+            <span class="depth-label">Derinlik 1</span>
+            <div id="node-3" class="tree-node">3</div>
+          </div>
+          <div class="level-row">
+            <span class="depth-label">Derinlik 2</span>
+            <div id="node-9" class="tree-node">9</div>
+            <div id="node-20" class="tree-node">20</div>
+          </div>
+          <div class="level-row">
+            <span class="depth-label">Derinlik 3</span>
+            <div id="node-15" class="tree-node">15</div>
+            <div id="node-7" class="tree-node">7</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">4</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. "Sonraki Adım" ile derinlik hesaplamasını başlatın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/max_depth_binary_tree.py</h2>
+      <pre><code>def max_depth(root: Optional[TreeNode[T]]) -> int:
+    if root is None:
+        return 0
+
+    left_depth = max_depth(root.left)
+    right_depth = max_depth(root.right)
+
+    return 1 + max(left_depth, right_depth)</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 11 Streak
+    </footer>
+  </div>
+
+  <script>
+    let step = 0;
+    const steps = [
+      { highlight: [], log: "Kök düğüm (3) incelenmeye başlıyor." },
+      { highlight: ['node-3', 'node-9'], log: "Sol dal: Düğüm 9 incelendi (yaprak düğüm, derinlik: 2)." },
+      { highlight: ['node-3', 'node-20'], log: "Sağ dal: Düğüm 20 incelendi -> dallarına (15, 7) iniliyor." },
+      { highlight: ['node-3', 'node-20', 'node-15', 'node-7'], log: "En alt seviye: 15 ve 7 yaprak düğümlerine ulaşıldı (derinlik: 3)." },
+      { highlight: ['node-3', 'node-20', 'node-15', 'node-7'], log: "🎉 TAMAMLANDI! 1 + max(sol: 1, sağ: 2) = 3. Ağacın Maksimum Derinliği = 3." }
+    ];
+
+    function render() {
+      const s = steps[step];
+      document.querySelectorAll('.tree-node').forEach(node => {
+        node.classList.toggle('highlight', s.highlight.includes(node.id));
+      });
+
+      document.getElementById('stepCounter').textContent = step;
+      document.getElementById('prevBtn').disabled = step === 0;
+      document.getElementById('nextBtn').disabled = step === steps.length - 1;
+      document.getElementById('logBox').textContent = s.log;
+    }
+
+    function nextStep() {
+      if (step < steps.length - 1) { step++; render(); }
+    }
+    function prevStep() {
+      if (step > 0) { step--; render(); }
+    }
+    function resetSim() { step = 0; render(); }
+
+    render();
+  </script>
+</body>
+</html>

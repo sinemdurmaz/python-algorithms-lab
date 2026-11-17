@@ -8,6 +8,7 @@ from algorithms.reverse_linked_list import reverse_linked_list
 from algorithms.has_cycle import has_cycle
 from algorithms.merge_sorted_lists import merge_two_sorted_lists
 from algorithms.invert_binary_tree import invert_tree
+from algorithms.max_depth_binary_tree import max_depth
 
 __all__ = [
     "is_valid_parentheses",
@@ -20,4 +21,5 @@ __all__ = [
     "has_cycle",
     "merge_two_sorted_lists",
     "invert_tree",
+    "max_depth",
 ]
