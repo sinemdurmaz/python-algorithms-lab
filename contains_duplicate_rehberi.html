@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Algorithms Lab: Kayan Pencere + Hash Set Rehberi</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-hover: #1a253f;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-teal: #14b8a6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border: #1e293b;
+      --code-bg: #0b1120;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2.5rem 1rem 5rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-top {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border-radius: 9999px;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .concept-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .concept-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent-purple);
+    }
+
+    /* Visualizer */
+    .visualizer-container {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .array-track {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 2rem 1rem;
+      background: #070a12;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+
+    .cell {
+      width: 58px;
+      height: 58px;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .cell .idx {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      position: absolute;
+      top: 3px;
+    }
+
+    .cell.current {
+      border-color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.25);
+      transform: translateY(-4px);
+    }
+
+    .cell.match {
+      border-color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.3);
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
+    }
+
+    .hashset-box {
+      background: #080d1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: monospace;
+    }
+
+    .hash-chip {
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid var(--accent-purple);
+      color: #fff;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: var(--card-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .action-btn:hover:not(:disabled) {
+      background: var(--accent-purple);
+      color: #fff;
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .log-box {
+      margin-top: 1.25rem;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      color: var(--accent-teal);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+    }
+
+    pre code {
+      display: block;
+      padding: 1.25rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Gün 13 &bull; Sliding Window & Set &bull; LeetCode #219</div>
+      <h1>Contains Duplicate II: Mesafe Kontrolü</h1>
+      <p class="subtitle">
+        Kayan pencere (Sliding Window) ve Hash Set güçlerini birleştirerek $O(N)$ zaman ve $O(k)$ alanda yakın eleman tekrarını yakalama.
+      </p>
+    </header>
+
+    <div class="grid-2">
+      <div class="concept-box">
+        <div class="concept-title">🔍 Problem Nedir?</div>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">
+          Bir dizide aynı değere sahip iki elemanın indeks farkının en fazla $k$ olup olmadığını bulmak (<code>nums[i] == nums[j]</code> ve <code>abs(i - j) &le; k</code>).
+        </p>
+      </div>
+
+      <div class="concept-box">
+        <div class="concept-title">🛡️ Dinamik Hash Set Penceresi</div>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">
+          Kümede yalnızca son $k$ eleman tutulur. Boyut $k$'yı aştığında pencereden çıkan en eski eleman <code>window.remove(nums[i - k])</code> ile temizlenir. Alan: <strong>$O(k)$</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Canlı Simülatör -->
+    <div class="card">
+      <h2>🎮 Canlı Simülatör: nums = [1, 2, 3, 1], k = 3</h2>
+      <div class="visualizer-container">
+        <div id="arrayTrack" class="array-track"></div>
+
+        <div class="hashset-box">
+          <span style="color: var(--text-muted); font-size: 0.85rem;">Hash Set Penceresi (Maks {k}):</span>
+          <div id="hashsetChips" style="display: flex; gap: 0.5rem;"></div>
+        </div>
+
+        <div class="controls">
+          <div class="btn-group">
+            <button id="prevBtn" class="action-btn" onclick="prevStep()" disabled>&larr; Önceki</button>
+            <button id="nextBtn" class="action-btn" onclick="nextStep()">Sonraki Adım &rarr;</button>
+            <button class="action-btn" onclick="resetSim()">🔄 Başa Dön</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Adım: <span id="stepCounter" style="color: #fff; font-weight: 700;">0</span> / <span id="totalSteps">3</span>
+          </div>
+        </div>
+
+        <div id="logBox" class="log-box">
+          Simülasyon hazır. "Sonraki Adım" butonuna basarak taramayı başlatın.
+        </div>
+      </div>
+    </div>
+
+    <!-- Python Kodu -->
+    <div class="card">
+      <h2>🐍 Python Çözümü: algorithms/contains_duplicate.py</h2>
+      <pre><code>def contains_nearby_duplicate(nums: list[int], k: int) -> bool:
+    window: set[int] = set()
+
+    for i, num in enumerate(nums):
+        if num in window:
+            return True  # k mesafesi içinde tekrar bulundu!
+
+        window.add(num)
+
+        if len(window) > k:
+            window.remove(nums[i - k])  # En eskiyi çıkar
+
+    return False</code></pre>
+    </div>
+
+    <footer>
+      <strong>Sinem Durmaz</strong> &bull; Python Algorithms Lab &bull; Gün 13 Streak
+    </footer>
+  </div>
+
+  <script>
+    const NUMS = [1, 2, 3, 1];
+    const K = 3;
+    let step = 0;
+
+    const steps = [
+      { current: 0, set: [1], match: false, log: "İndeks 0: 1 kümeye eklendi. Set: {1}." },
+      { current: 1, set: [1, 2], match: false, log: "İndeks 1: 2 kümeye eklendi. Set: {1, 2}." },
+      { current: 2, set: [1, 2, 3], match: false, log: "İndeks 2: 3 kümeye eklendi. Set: {1, 2, 3} (Pencere doldu)." },
+      { current: 3, set: [1, 2, 3], match: true, log: "🎉 İndeks 3: Sayı 1 zaten kümede mevcut! abs(3 - 0) = 3 <= 3. TEKRAR BULUNDU (True)!" }
+    ];
+
+    function render() {
+      const track = document.getElementById('arrayTrack');
+      track.innerHTML = '';
+      const s = steps[step];
+
+      NUMS.forEach((val, idx) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.innerHTML = `<span class="idx">[${idx}]</span>${val}`;
+
+        if (idx === s.current) cell.classList.add('current');
+        if (s.match && (idx === 0 || idx === 3)) cell.classList.add('match');
+
+        track.appendChild(cell);
+      });
+
+      const chips = document.getElementById('hashsetChips');
+      chips.innerHTML = '';
+      s.set.forEach(v => {
+        const chip = document.createElement('span');
+        chip.className = 'hash-chip';
+        chip.textContent = v;
+        chips.appendChild(chip);
+      });
+
+      document.getElementById('stepCounter').textContent = step;
+      document.getElementById('prevBtn').disabled = step === 0;
+      document.getElementById('nextBtn').disabled = step === steps.length - 1;
+      document.getElementById('logBox').textContent = s.log;
+    }
+
+    function nextStep() {
+      if (step < steps.length - 1) { step++; render(); }
+    }
+    function prevStep() {
+      if (step > 0) { step--; render(); }
+    }
+    function resetSim() { step = 0; render(); }
+
+    render();
+  </script>
+</body>
+</html>

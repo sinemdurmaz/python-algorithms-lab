@@ -10,6 +10,7 @@ from algorithms.merge_sorted_lists import merge_two_sorted_lists
 from algorithms.invert_binary_tree import invert_tree
 from algorithms.max_depth_binary_tree import max_depth
 from algorithms.max_average_subarray import find_max_average
+from algorithms.contains_duplicate import contains_nearby_duplicate
 
 __all__ = [
     "is_valid_parentheses",
@@ -24,4 +25,5 @@ __all__ = [
     "invert_tree",
     "max_depth",
     "find_max_average",
+    "contains_nearby_duplicate",
 ]

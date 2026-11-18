@@ -20,6 +20,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **10** | **Binary Trees** | [TreeNode & BinaryTree](data_structures/binary_tree.py) & [Invert Binary Tree (LeetCode #226)](algorithms/invert_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `85/85 PASSED` ✅ |
 | **11** | **Binary Trees & DFS** | [Maximum Depth of Binary Tree (LeetCode #104)](algorithms/max_depth_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `91/91 PASSED` ✅ |
 | **12** | **Sliding Window** | [Maximum Average Subarray I (LeetCode #643)](algorithms/max_average_subarray.py) | Kolay | $O(N)$ | $O(1)$ | `98/98 PASSED` ✅ |
+| **13** | **Sliding Window & Set** | [Contains Duplicate II (LeetCode #219)](algorithms/contains_duplicate.py) | Kolay | $O(N)$ | $O(k)$ | `106/106 PASSED` ✅ |
+
+---
+
+## 🔍 Gün 13: Contains Duplicate II (Kayan Pencere + Hash Set)
+
+* **Algoritma:** `algorithms/contains_duplicate.py`
+  * Dinamik $k$ boyutlu Hash Set penceresiyle dizideki yakın eleman tekrarlarını $O(N)$ zaman ve $O(k)$ alanda tespit eden algoritma.
+* **Görsel Rehber:** [contains_duplicate_rehberi.html](contains_duplicate_rehberi.html)
 
 ---
 
