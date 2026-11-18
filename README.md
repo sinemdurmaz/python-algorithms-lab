@@ -19,6 +19,15 @@ Her gün bir **Veri Yapısı (Data Structure)** ve **Algoritma (LeetCode)** çö
 | **09** | **Linked Lists & Splice** | [Merge Two Sorted Lists (LeetCode #21)](algorithms/merge_sorted_lists.py) (Dummy Head) | Kolay | $O(N + M)$ | $O(1)$ | `76/76 PASSED` ✅ |
 | **10** | **Binary Trees** | [TreeNode & BinaryTree](data_structures/binary_tree.py) & [Invert Binary Tree (LeetCode #226)](algorithms/invert_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `85/85 PASSED` ✅ |
 | **11** | **Binary Trees & DFS** | [Maximum Depth of Binary Tree (LeetCode #104)](algorithms/max_depth_binary_tree.py) | Kolay | $O(N)$ | $O(H)$ | `91/91 PASSED` ✅ |
+| **12** | **Sliding Window** | [Maximum Average Subarray I (LeetCode #643)](algorithms/max_average_subarray.py) | Kolay | $O(N)$ | $O(1)$ | `98/98 PASSED` ✅ |
+
+---
+
+## 🪟 Gün 12: Kayan Pencere (Sliding Window) & Maksimum Ortalama
+
+* **Algoritma:** `algorithms/max_average_subarray.py`
+  * $k$ boyutlu pencereyi dizi üzerinde kaydırarak her adımda $O(1)$ sürede toplamı güncelleyen ve maksimum ortalamayı bulan $O(N)$ zamanlı algoritma.
+* **Görsel Rehber:** [sliding_window_rehberi.html](sliding_window_rehberi.html)
 
 ---
 
